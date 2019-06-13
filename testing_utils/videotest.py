@@ -84,13 +84,13 @@ class VideoTest(object):
             "trying to open a webcam, make sure you video_path is an integer!"))
         
         # Compute aspect ratio of video     
-        vidw = vid.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH)
-        vidh = vid.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT)
+        vidw = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
+        vidh = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
         vidar = vidw/vidh
         
         # Skip frames until reaching start_frame
         if start_frame > 0:
-            vid.set(cv2.cv.CV_CAP_PROP_POS_MSEC, start_frame)
+            vid.set(cv2.CAP_PROP_POS_MSEC, start_frame)
             
         accum_time = 0
         curr_fps = 0
