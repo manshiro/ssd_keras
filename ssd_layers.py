@@ -108,7 +108,6 @@ class PriorBox(Layer):
         self.clip = True
         super(PriorBox, self).__init__(**kwargs)
 
-    #def get_output_shape_for(self, input_shape):
     def compute_output_shape(self, input_shape):
         num_priors_ = len(self.aspect_ratios)
         layer_width = input_shape[self.waxis]
