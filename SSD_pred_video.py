@@ -5,7 +5,8 @@ from keras.backend.tensorflow_backend import set_session
 from keras.models import Model
 from keras.preprocessing import image
 import numpy as np
-from scipy.misc import imread
+#from scipy.misc import imread
+from imageio import imread
 import tensorflow as tf
 
 from ssd import SSD300
@@ -27,16 +28,17 @@ config.gpu_options.per_process_gpu_memory_fraction = 0.45
 set_session(tf.Session(config=config))
 
 
-voc_classes = ['face', 'hand']
+#voc_classes = ['face', 'hand']
+voc_classes = ['koide', 'shirakawa']
 NUM_CLASSES = len(voc_classes) + 1
 
 input_shape=(300, 300, 3)
 model = SSD300(input_shape, num_classes=NUM_CLASSES)
-# model.load_weights('weights_SSD300.hdf5', by_name=True)
-model.load_weights('./checkpoints/weights.99-2.78.hdf5', by_name=True)
+#model.load_weights('weights_SSD300.hdf5', by_name=True)
+model.load_weights('./checkpoints/weights.03-8.62.hdf5', by_name=True)
 bbox_util = BBoxUtility(NUM_CLASSES)
 
-vid = cv2.VideoCapture('./free_data/lonestartx_free.mp4')
+vid = cv2.VideoCapture('./free_data/kayabacho.mp4')
 if not vid.isOpened():
     raise IOError(("Couldn't open video file or webcam. If you're "
     "trying to open a webcam, make sure you video_path is an integer!"))
@@ -46,7 +48,7 @@ vidh = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
 fps = vid.get(cv2.CAP_PROP_FPS)
 
 fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-out = cv2.VideoWriter('./free_data/output.avi', int(fourcc), fps, (int(vidw), int(vidh)))
+out = cv2.VideoWriter('./free_data/kayaba_result.mp4', int(fourcc), fps, (int(vidw), int(vidh)))
 
 while True:
 # for i in range(10):  # for test
@@ -96,7 +98,7 @@ while True:
             label = int(top_label_indices[i])
             label_name = voc_classes[label - 1]
             # print(label_name)
-            # cv2.rectangle(img_org, (xmin, ymin), (xmax+1, ymax+1), (0, 0, 255), 1)  # red box
+            cv2.rectangle(img_org, (xmin, ymin), (xmax+1, ymax+1), (0, 0, 255), 1)  # red box
             img_org = mosaic_area(img_org, xmin, ymin, xmax+1, ymax+1, ratio=0.1) # mosaic
 
     out.write(img_org)
