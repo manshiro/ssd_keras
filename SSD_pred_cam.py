@@ -5,7 +5,8 @@ from keras.backend.tensorflow_backend import set_session
 from keras.models import Model
 from keras.preprocessing import image
 import numpy as np
-from scipy.misc import imread
+#from scipy.misc import imread
+from imageio import imread
 import tensorflow as tf
 import math
 from PIL import Image, ImageDraw, ImageFont
@@ -19,12 +20,13 @@ config = tf.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.45
 set_session(tf.Session(config=config))
 
-voc_classes = ['face', 'hand']
+voc_classes = ['botle']
 NUM_CLASSES = len(voc_classes) + 1
 
 input_shape=(300, 300, 3)
 model = SSD300(input_shape, num_classes=NUM_CLASSES)
-model.load_weights('weights_SSD300.hdf5', by_name=True)
+# model.load_weights('weights_SSD300.hdf5', by_name=True)
+model.load_weights('./checkpoints/weights.200-0.68.hdf5', by_name=True)
 bbox_util = BBoxUtility(NUM_CLASSES)
 
 cam = cv2.VideoCapture(0)
