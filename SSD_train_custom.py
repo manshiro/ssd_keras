@@ -9,14 +9,13 @@ import numpy as np
 import pickle
 import os
 from random import shuffle
-from scipy.misc import imread
-from scipy.misc import imresize
+from imageio import imread
+#from scipy.misc import imresize
+from skimage.transform import resize as imresize
 import tensorflow as tf
-
 from ssd import SSD300
 from ssd_training import MultiboxLoss
 from ssd_utils import BBoxUtility
-
 import time
 
 plt.rcParams['figure.figsize'] = (8, 8)
@@ -25,6 +24,7 @@ plt.rcParams['image.interpolation'] = 'nearest'
 np.set_printoptions(suppress=True)
 
 NUM_CLASSES = 3
+EPOCH = 100
 input_shape = (300, 300, 3)
 
 priors = pickle.load(open('prior_boxes_ssd300.pkl', 'rb'))
@@ -252,16 +252,16 @@ model.compile(optimizer=optim,
               metrics=['accuracy'])
 
 
-nb_epoch = 100
+nb_epoch = EPOCH
 
 start = time.time()
-
-history = model.fit_generator(gen.generate(True), gen.train_batches,
-                              nb_epoch, verbose=1,
-                              callbacks=callbacks,
-                              validation_data=gen.generate(False),
-                              nb_val_samples=gen.val_batches,
-                              nb_worker=1)
+history = model.fit_generator(gen.generate(True), 
+                                gen.train_batches,
+                                nb_epoch, verbose=1,
+                                callbacks=callbacks,
+                                validation_data=gen.generate(False),
+                                nb_val_samples=gen.val_batches,
+                                nb_worker=1)
 
 elapsed_time = time.time() - start
 print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
